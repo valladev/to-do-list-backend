@@ -11,8 +11,47 @@ datasource db {
 }
 
 model User {
-  id        Int @id @default(autoincrement())
-  email     String @unique
-  password  String
-  name      String
+  id       Int        @id @default(autoincrement())
+  name     String
+  email    String     @unique
+  password String
+  lists    ToDoList[]
+}
+
+model ToDoList {
+  id         Int      @id @default(autoincrement())
+  name       String
+  userId     Int
+  categoryId Int
+  user       User     @relation(fields: [userId], references: [id])
+  tasks      Task[]   @relation("tasksList")
+  drives     Drive[]
+  category   Category @relation(fields: [categoryId], references: [id])
+}
+
+model Task {
+  id          Int      @id @default(autoincrement())
+  description String
+  completed   Boolean
+  listId      Int
+  categoryId  Int
+  list        ToDoList @relation("tasksList", fields: [listId], references: [id])
+  category    Category @relation(fields: [categoryId], references: [id])
+}
+
+model Category {
+  id     Int        @id @default(autoincrement())
+  name   String
+  lists  ToDoList[]
+  tasks  Task[] // Adicione o relacionamento oposto
+  drives Drive[]    @relation("driveCategory")
+}
+
+model Drive {
+  id          Int      @id @default(autoincrement())
+  description String
+  listId      Int
+  categoryId  Int
+  list        ToDoList @relation(fields: [listId], references: [id])
+  category    Category @relation("driveCategory", fields: [categoryId], references: [id])
 }
