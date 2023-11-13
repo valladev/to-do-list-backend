@@ -10,5 +10,5 @@ export class ToDoList implements Prisma.ToDoListUncheckedCreateInput {
   categoryId: number;
   task?: Task[];
   drive?: Drive[];
-  category: Category[];
+  category?: Category[];
 }
