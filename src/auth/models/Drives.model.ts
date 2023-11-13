@@ -1,9 +1,9 @@
+// movimentacao.model.ts
 import { Prisma } from '@prisma/client';
 
-export class Task implements Prisma.TaskUncheckedCreateInput {
+export class Drive implements Prisma.DriveUncheckedCreateInput {
   id?: number;
   description: string;
-  completed: boolean;
   listId: number;
   categoryId: number;
 }
