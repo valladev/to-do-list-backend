@@ -1,4 +1,4 @@
-import { IsArray, IsBoolean, IsNumber, IsString } from 'class-validator';
+import { IsBoolean, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class CreateTaskDto {
   @IsString()
@@ -7,9 +7,11 @@ export class CreateTaskDto {
   @IsBoolean()
   completed: boolean;
 
+  @IsOptional()
   @IsNumber()
-  listId: number;
+  listId?: number;
 
+  @IsOptional()
   @IsNumber()
-  categoryId: number;
+  categoryId?: number;
 }
