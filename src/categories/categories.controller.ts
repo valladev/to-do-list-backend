@@ -6,6 +6,7 @@ import {
   Param,
   // Patch,
   Post,
+  Req,
 } from '@nestjs/common';
 import { CategoriesService } from './categories.service';
 import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
@@ -32,8 +33,10 @@ export class CategoriesController {
   }
 
   @Get()
-  findAll() {
-    return this.categoriesService.findAll();
+  async findAll(@Req() req) {
+    const userId = req.user.id;
+    const categories = await this.categoriesService.findAll(userId);
+    return categories;
   }
 
   @Get(':id')

@@ -24,10 +24,32 @@ export class CategoriesService {
     return newCategory;
   }
 
-  async findAll() {
-    const categories = await this.prisma.category.findMany();
-    const total = await this.prisma.category.count();
-    return { categories, total };
+  async findAll(userId: number) {
+    const user = await this.prisma.user.findUnique({ where: { id: userId } });
+
+    if (!user) {
+      throw new NotFoundException('Usuário não encontrado');
+    }
+
+    const categories = await this.prisma.category.findMany({
+      where: { userId },
+      include: {
+        user: true,
+      },
+    });
+
+    const flattenedCategories = categories.map((category) => ({
+      id: category.id,
+      name: category.name,
+      userId: category.userId,
+    }));
+
+    console.log(userId);
+    const total = categories.length;
+    
+    if (userId === user.id) {
+      return { categories: flattenedCategories, total };
+    }
   }
 
   findOne(id: number) {
