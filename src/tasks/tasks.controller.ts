@@ -1,20 +1,32 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { TasksService } from './TasksService';
-import { CreateTaskDto } from './dto/create-task.dto';
+import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
 import { UpdateTaskDto } from './dto/update-task.dto';
+import { TasksService } from './tasks.service';
+import { CreateTaskDto } from './dto/create-task.dto';
+import { number } from 'react-admin';
+import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
+import { User } from 'src/user/entities/user.entity';
 
 @Controller('tasks')
 export class TasksController {
-  constructor(private readonly tasksService: TasksService) { }
+  constructor(private readonly tasksService: TasksService) {}
 
   @Post('create')
-  create(@Body() createTaskDto: CreateTaskDto) {
-    return this.tasksService.create(createTaskDto);
+  async create(
+    @CurrentUser() user: User,
+    @Body() createTaskDto: CreateTaskDto,
+  ) {
+    const userId = user.id;
+    console.log(userId);
+    const newList = await this.tasksService.create(userId, createTaskDto);
+    return { message: 'Task criada', data: newList };
   }
 
   @Get()
-  findAll() {
-    return this.tasksService.findAll();
+  async findAll(@CurrentUser() user: User) {
+    const userId = user.id;
+    const tasks = await this.tasksService.findAll(userId);
+    
+    return tasks;
   }
 
   @Get(':id')

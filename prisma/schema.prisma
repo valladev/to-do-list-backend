@@ -16,17 +16,20 @@ model User {
   email    String     @unique
   password String
   lists    ToDoList[]
+  tasks    Task[]
+  category Category[]
+  drive    Drive[]
 }
 
 model ToDoList {
   id         Int      @id @default(autoincrement())
   name       String
   userId     Int
-  categoryId Int
+  categoryId Int?
   user       User     @relation(fields: [userId], references: [id])
   tasks      Task[]   @relation("tasksList")
   drives     Drive[]
-  category   Category @relation(fields: [categoryId], references: [id])
+  category   Category? @relation(fields: [categoryId], references: [id])
 }
 
 model Task {
@@ -35,23 +38,35 @@ model Task {
   completed   Boolean
   listId      Int?
   categoryId  Int?
+  userId      Int
   list        ToDoList? @relation("tasksList", fields: [listId], references: [id])
+  user        User      @relation(fields: [userId], references: [id])
   category    Category? @relation(fields: [categoryId], references: [id])
+  drive       Drive[]  
+
 }
 
 model Category {
   id     Int        @id @default(autoincrement())
   name   String
+  userId Int      
   lists  ToDoList[]
   tasks  Task[] // Adicione o relacionamento oposto
-  drives Drive[]    @relation("driveCategory")
+  drives Drive[]
+  user  User      @relation(fields: [userId], references: [id])
 }
 
 model Drive {
-  id          Int      @id @default(autoincrement())
-  description String
-  listId      Int
-  categoryId  Int
-  list        ToDoList @relation(fields: [listId], references: [id])
-  category    Category @relation("driveCategory", fields: [categoryId], references: [id])
+  id           Int      @id @default(autoincrement())
+  description  String
+  createdAt    DateTime @default(now())
+  userId       Int?
+  listId       Int
+  categoryId   Int
+  taskId       Int?     // Adicione uma coluna para o ID da tarefa
+  operation    String   // Adicione uma coluna para a operação realizada
+  list         ToDoList @relation(fields: [listId], references: [id])
+  category     Category @relation(fields: [categoryId], references: [id])
+  task         Task?    @relation(fields: [taskId], references: [id])
+  user         User?    @relation(fields: [userId], references: [id])
 }

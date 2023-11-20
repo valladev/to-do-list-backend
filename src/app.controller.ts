@@ -5,6 +5,7 @@ import { User } from './user/entities/user.entity';
 
 @Controller()
 export class AppController {
+  tasksService: any;
   constructor(private readonly appService: AppService) {}
 
   @Get()

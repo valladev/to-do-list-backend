@@ -6,4 +6,5 @@ export class Drive implements Prisma.DriveUncheckedCreateInput {
   description: string;
   listId: number;
   categoryId: number;
+  operation: string;
 }

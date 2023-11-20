@@ -8,16 +8,27 @@ import {
   Post,
 } from '@nestjs/common';
 import { CategoriesService } from './categories.service';
-import { CreateCategoryDto } from './dto/create-category.dto';
+import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
+import { User } from '@prisma/client';
+import { CreateCategoryDto } from 'src/categories/dto/create-category.dto';
 // import { UpdateCategoryDto } from './dto/update-category.dto';
 
 @Controller('categories')
 export class CategoriesController {
   constructor(private readonly categoriesService: CategoriesService) {}
 
-  @Post('create')
-  create(@Body() data: CreateCategoryDto) {
-    return this.categoriesService.create(data);
+  @Post()
+  async create(
+    @CurrentUser() user: User,
+    @Body() createCategoryDto: CreateCategoryDto,
+  ) {
+    const userId = user.id;
+    console.log(userId);
+    const newCategory = await this.categoriesService.create(
+      userId,
+      createCategoryDto,
+    );
+    return { message: 'Lista criada com sucesso', data: newCategory };
   }
 
   @Get()

@@ -7,11 +7,12 @@ import { UpdateTaskDto } from './dto/update-task.dto';
 export class TasksService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(createTaskDto: CreateTaskDto) {
+  async create(userId: number, createTaskDto: CreateTaskDto) {
     const { listId, categoryId, ...rest } = createTaskDto;
 
     const data = {
       ...rest,
+      user: { connect: { id: userId } },
       list: listId ? { connect: { id: listId } } : undefined,
       category: categoryId ? { connect: { id: categoryId } } : undefined,
     };
@@ -21,8 +22,24 @@ export class TasksService {
     return createdTask;
   }
 
-  findAll() {
-    return `This action returns all tasks`;
+  async findAll(userId: number) {
+    const tasks = await this.prisma.task.findMany({
+      where: {
+        userId,
+      },
+      include: {
+        category: true, // Inclui os dados da categoria relacionada
+        user: true,
+      },
+    });
+
+    const total = await this.prisma.task.count({
+      where: {
+        userId: userId,
+      },
+    });
+
+    return { tasks, total };
   }
 
   findOne(id: number) {
