@@ -24,6 +24,7 @@ model User {
 model ToDoList {
   id         Int      @id @default(autoincrement())
   name       String
+  completed   Boolean?
   userId     Int
   categoryId Int?
   user       User     @relation(fields: [userId], references: [id])
@@ -43,7 +44,6 @@ model Task {
   user        User      @relation(fields: [userId], references: [id])
   category    Category? @relation(fields: [categoryId], references: [id])
   drive       Drive[]  
-
 }
 
 model Category {

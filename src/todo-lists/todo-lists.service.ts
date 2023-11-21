@@ -50,7 +50,14 @@ export class TodoListsService {
 
     const total = lists.length;
 
-    return { lists: flattenedLists, total };
+    const totalCompleted = await this.prisma.toDoList.count({
+      where: {
+        userId: userId,
+        completed: true,
+      },
+    });
+
+    return { lists: flattenedLists, total, totalCompleted };
   }
 
   async findOne(userId: number, listId: number) {
@@ -68,11 +75,18 @@ export class TodoListsService {
       },
     });
 
+    const totalCompleted = await this.prisma.toDoList.count({
+      where: {
+        userId: userId,
+        completed: true,
+      },
+    });
+
     if (!list) {
       throw new NotFoundException('Lista não encontrada');
     }
 
-    return list;
+    return { list, totalCompleted };
   }
 
   async update(

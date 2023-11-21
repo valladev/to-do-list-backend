@@ -1,4 +1,4 @@
-import { IsString, IsNumber, IsEmpty, IsOptional } from 'class-validator';
+import { IsString, IsNumber, IsEmpty, IsOptional, IsBoolean } from 'class-validator';
 
 export class CreateTodoListDto {
   @IsString()
@@ -10,4 +10,8 @@ export class CreateTodoListDto {
   @IsNumber()
   @IsOptional()
   categoryId: number | null;
+
+  @IsBoolean()
+  @IsOptional()
+  completed: boolean;
 }
