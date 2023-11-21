@@ -39,7 +39,14 @@ export class TasksService {
       },
     });
 
-    return { tasks, total };
+    const totalCompleted = await this.prisma.task.count({
+      where: {
+        userId: userId,
+        completed: true,
+      },
+    });
+
+    return { tasks, total, totalCompleted };
   }
 
   findOne(id: number) {

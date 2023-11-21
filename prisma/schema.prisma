@@ -35,7 +35,7 @@ model ToDoList {
 model Task {
   id          Int      @id @default(autoincrement())
   description String
-  completed   Boolean
+  completed   Boolean?
   listId      Int?
   categoryId  Int?
   userId      Int

@@ -10,7 +10,7 @@ import { User } from 'src/user/entities/user.entity';
 export class TasksController {
   constructor(private readonly tasksService: TasksService) {}
 
-  @Post('create')
+  @Post()
   async create(
     @CurrentUser() user: User,
     @Body() createTaskDto: CreateTaskDto,
@@ -25,7 +25,7 @@ export class TasksController {
   async findAll(@CurrentUser() user: User) {
     const userId = user.id;
     const tasks = await this.tasksService.findAll(userId);
-    
+
     return tasks;
   }
 

@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Param,
+  Patch,
   // Patch,
   Post,
   Req,
@@ -12,6 +13,7 @@ import { CategoriesService } from './categories.service';
 import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
 import { User } from '@prisma/client';
 import { CreateCategoryDto } from 'src/categories/dto/create-category.dto';
+import { UpdateCategoryDto } from './dto/update-category.dto';
 // import { UpdateCategoryDto } from './dto/update-category.dto';
 
 @Controller('categories')
@@ -29,7 +31,7 @@ export class CategoriesController {
       userId,
       createCategoryDto,
     );
-    return { message: 'Lista criada com sucesso', data: newCategory };
+    return { message: 'Categoria criada com sucesso', data: newCategory };
   }
 
   @Get()
