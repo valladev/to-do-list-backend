@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Put } from '@nestjs/common';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { TasksService } from './tasks.service';
 import { CreateTaskDto } from './dto/create-task.dto';
@@ -8,7 +8,7 @@ import { User } from 'src/user/entities/user.entity';
 
 @Controller('tasks')
 export class TasksController {
-  constructor(private readonly tasksService: TasksService) {}
+  constructor(private readonly tasksService: TasksService) { }
 
   @Post()
   async create(
@@ -32,6 +32,13 @@ export class TasksController {
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.tasksService.findOne(+id);
+  }
+
+  @Put(':id')
+  async completeTask(@Param('id') id: number, @CurrentUser() user: User) {
+    const userId = user.id;
+    const updateTask = await this.tasksService.completeTask(id, userId);
+    return { message: 'Task marked as completed', data: updateTask };
   }
 
   @Patch(':id')
